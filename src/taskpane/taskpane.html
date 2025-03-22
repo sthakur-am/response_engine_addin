@@ -1,0 +1,250 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CAIO Services Task Pane Add-in</title>
+
+    <!-- Office JavaScript API -->
+    <!-- <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script> -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+    <!-- For more information on Fluent UI, visit https://developer.microsoft.com/fluentui#/. -->
+    <!-- <link rel="stylesheet" href="https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/office-ui-fabric-core/11.1.0/css/fabric.min.css"/> -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.min.css" />
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.components.min.css" />
+    <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
+
+    <!-- Template styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+    <link href="index.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="ms-font-m ms-welcome ms-Fabric">
+    <header id="content-header">
+        <div class="padding ms-bgColor-neutralLight" style="padding-left: 10px;padding-top: 5px;display: flex;flex-direction: row;">
+            <div style="padding-right: 5px;"><img width="32" height="32" src="../../assets/logo-32.png" alt="A&M" title="Alvarez and Marsal" /></div>
+            <div>&nbsp;</div>
+            <div class="ms-font-xl ms-fontColor-black ms-fontWeight-semibold">Response Engine</div>
+        </div>
+
+    </header>
+    <section id="sideload-msg" class="ms-welcome__main">
+        <h2 class="ms-font-xl">Please <a target="_blank" href="https://learn.microsoft.com/office/dev/add-ins/testing/test-debug-office-add-ins#sideload-an-office-add-in-for-testing">sideload</a> your add-in to see app body.</h2>
+    </section>
+    <main id="app-body" class="ms-welcome__main" style="display: none;">
+        <h4 class="ms-font-m"> Your intelligent assistant for crafting RFP responses </h4>
+
+          <div id="landing-page" class="landing-page">
+              <!-- <button class="ms-Button ms-Button--compound" id="generateTemplate">
+                <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span> 
+                <span class="ms-Button-label">Start Drafting Your Response</span> 
+                <span class="ms-Button-description">Generate initial document structure based on the RFP and response guidelines docs</span> 
+              </button>
+            <br/><br/> -->
+            <button id="generateTemplate" class="ms-Button ms-Button--primary">
+              <span class="ms-Button-label">Start Drafting Your Response</span>
+            </button>
+          </div>
+
+        <!-- Upload Dialog Box -->
+
+        <div id="upload-dialog" class="upload-dialog">
+          <div class="upload-dialog-content">
+            <div class="upload-dialog-header">
+              <h2 class="ms-font-xl">Required Documents</h2>
+              <button class="ms-Button ms-Button--icon close-dialog" id="close-dialog" title="Close">
+                <i class="ms-Icon ms-Icon--ChromeClose"></i>
+              </button>
+            </div>
+            
+            <div class="upload-dialog-body">
+              <div class="upload-section">
+                <div class="upload-section-header">
+                  <h3 class="ms-font-l">RFP Document</h3>
+                  <button class="ms-Button ms-Button--icon upload-button" data-for="rfp-upload" title="Upload RFP">
+                    <i class="ms-Icon ms-Icon--Upload"></i>
+                  </button>
+                </div>
+                <div class="upload-group">
+                  <input type="file" id="rfp-upload" accept=".pdf,.doc,.docx" class="hidden">
+                  <span id="rfp-filename" class="filename"></span>
+                </div>
+              </div>
+              
+              <div class="upload-section">
+                <div class="upload-section-header">
+                  <h3 class="ms-font-l">Sample Document</h3>
+                  <button class="ms-Button ms-Button--icon upload-button" data-for="sample-upload" title="Upload Sample">
+                    <i class="ms-Icon ms-Icon--Upload"></i>
+                  </button>
+                </div>
+                <div class="upload-group">
+                  <input type="file" id="sample-upload" accept=".pdf,.doc,.docx" class="hidden">
+                  <span id="sample-filename" class="filename"></span>
+                </div>
+              </div>
+    
+              <div class="upload-section">
+                <div class="upload-section-header">
+                  <h3 class="ms-font-l">Reference Documents</h3>
+                  <button class="ms-Button ms-Button--icon upload-button" data-for="reference-upload" title="Upload References">
+                    <i class="ms-Icon ms-Icon--Upload"></i>
+                  </button>
+                </div>
+                <div class="upload-group">
+                  <input type="file" id="reference-upload" accept=".pdf,.doc,.docx" multiple class="hidden">
+                  <div id="reference-files" class="file-list"></div>
+                </div>
+              </div>
+            </div>
+    
+            <div class="dialog-actions">
+              <button id="cancel-button" class="ms-Button ms-Button--default">
+                <span class="ms-Button-label">Cancel</span>
+              </button>
+              <button id="continue-button" class="ms-Button ms-Button--primary" disabled>
+                <span class="ms-Button-label">Continue to Task Manager</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading screen -->
+
+        <div id="loading-screen" class="loading-screen hidden">
+          <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2 class="ms-font-xl loading-title">Initializing Task Manager</h2>
+            <p id="loading-status" class="loading-status">Loading task manager...</p>
+          </div>
+        </div>
+
+        <!-- loading screen -->
+
+
+        <div id="app" class="hidden">
+            <div class="header">
+              <div class="header-title-group">
+                <h2 class="ms-font-xl">Response Manager</h2>
+                <div class="header-actions">
+                  <button class="ms-Button ms-Button--icon" id="documents-repo-button" title="Documents Repo">
+                    <i class="ms-Icon ms-Icon--DocumentSet"></i>
+                  </button>
+                  <button class="ms-Button ms-Button--icon" id="chat-button" title="Chat">
+                    <i class="ms-Icon ms-Icon--Chat"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+                <div id="progress-label" class="progress-label"></div>
+              </div>
+            </div>
+            <div class="task-container">
+              <div class="task-list" id="task-list"></div>
+              <div id="status-panel" class="status-panel"></div>
+              <div class="complete-drafting-container">
+                <button id="complete-drafting" class="ms-Button ms-Button--primary">
+                  <span class="ms-Button-label">Complete Drafting</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Panel -->
+          <div id="chat-panel" class="chat-panel">
+            <div class="chat-header">
+              <h2 class="ms-font-l">Chat with RFP Assist</h2>
+              <button class="ms-Button ms-Button--icon" id="close-chat" title="Close">
+                <i class="ms-Icon ms-Icon--ChromeClose"></i>
+              </button>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input">
+              <input type="text" class="ms-TextField-field" id="message-input" placeholder="Type a message...">
+              <button class="ms-Button ms-Button--icon" id="send-message" title="Send">
+                <i class="ms-Icon ms-Icon--Send"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Documents Panel -->
+          <div id="documents-panel" class="documents-panel">
+            <div class="documents-header">
+              <h2 class="ms-font-l">Documents Repository</h2>
+              <button class="ms-Button ms-Button--icon" id="close-documents" title="Close">
+                <i class="ms-Icon ms-Icon--ChromeClose"></i>
+              </button>
+            </div>
+            <div class="documents-actions">
+              <label class="ms-Button ms-Button--primary upload-button">
+                <span class="ms-Button-label">Upload Files</span>
+                <input type="file" id="file-upload" multiple style="display: none">
+              </label>
+            </div>
+            <div class="documents-list" id="documents-list">
+              <div class="empty-state">
+                <i class="ms-Icon ms-Icon--DocumentSet"></i>
+                <p>No documents yet. Upload some files to get started.</p>
+              </div>
+            </div>
+          </div>
+
+        <div id="spinner-overlay" class="spinner-overlay">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="completion-page" class="completion-page">
+            <div class="completion-header">
+              <div class="completion-icon">
+                <i class="ms-Icon ms-Icon--CompletedSolid"></i>
+              </div>
+              <h3 class="ms-font-l">Drafting completed for this document</h3>
+            </div>
+
+            <div class="completion-meta" id="completion-meta">
+              <div>
+                <h3 class="ms-font-l">Started</h3>
+                <p class="text-lg font-light">March 10, 2025 </p>
+              </div>
+              <div>
+                <h3 class="ms-font-l">Completed</h3>
+                <p class="text-lg font-light">March 20, 2025</p>
+              </div>
+            </div>
+            <div class="completion-documents">
+              <h3 class="ms-font-l">Documents Used</h3>
+              <div class="completion-documents-list" id="completion-documents-list"></div>
+            </div>
+            </div>
+          </div>
+            
+            <!-- <div class="completion-body">
+              <div class="items-group">
+                <div class="item-group-header">
+                  <h3 class="ms-font-l">RFP Document</h3>
+                </div>
+              </div>
+              <div class="items-group">
+                <div class="items-group-header">
+                  <h3 class="ms-font-l">Sample Document</h3>
+                </div>
+              </div>
+              <div class="items-group">
+                <div class="items-group-header">
+                  <h3 class="ms-font-l">Reference Documents</h3>
+                </div>
+              </div> -->
+        </div>
+        
+    </main>
+    <!-- <script type="module" src="/taskpane.js"></script> -->
+</body>
+
+</html>
