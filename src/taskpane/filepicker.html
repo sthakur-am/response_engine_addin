@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Picker</title>
+</head>
+<body>
+  <input type="file" id="fileInput">
+  <script>
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+      var filePath = event.target.value;
+      Office.context.ui.messageParent(filePath);
+    });
+  </script>
+</body>
+</html>

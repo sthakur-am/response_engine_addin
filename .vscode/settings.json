@@ -1,0 +1,10 @@
+{
+    "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript"
+    ],
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/b7c843be-de23-4dda-9b73-34d3d7e2cac1/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/ResponseEngine",
+    "appService.deploySubpath": "."
+  }
+  

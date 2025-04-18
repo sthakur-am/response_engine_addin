@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css">
+    <link rel="stylesheet" href="/index.css">
+  </head>
+  <body class="ms-Fabric">
+    <div id="app">
+      <div class="header">
+        <div class="header-title-group">
+          <h1 class="ms-font-xxl">Task Manager</h1>
+          <div class="header-actions">
+            <label class="ms-Button ms-Button--icon upload-button" title="Upload Files">
+              <i class="ms-Icon ms-Icon--Upload"></i>
+              <input type="file" id="file-upload" multiple style="display: none">
+            </label>
+            <button class="ms-Button ms-Button--icon" id="chat-button" title="Chat">
+              <i class="ms-Icon ms-Icon--Chat"></i>
+            </button>
+          </div>
+        </div>
+        <div class="progress-container">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+      </div>
+      <div class="task-container">
+        <div class="task-list" id="task-list"></div>
+      </div>
+    </div>
+
+    <div id="chat-panel" class="chat-panel">
+      <div class="chat-header">
+        <h2 class="ms-font-l">Chat</h2>
+        <button class="ms-Button ms-Button--icon" id="close-chat" title="Close">
+          <i class="ms-Icon ms-Icon--ChromeClose"></i>
+        </button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input">
+        <input type="text" class="ms-TextField-field" id="message-input" placeholder="Type a message...">
+        <button class="ms-Button ms-Button--icon" id="send-message" title="Send">
+          <i class="ms-Icon ms-Icon--Send"></i>
+        </button>
+      </div>
+    </div>
+
+    <script type="module" src="/index.js"></script>
+  </body>
+</html>

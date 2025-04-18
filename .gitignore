@@ -1,0 +1,6 @@
+# Build output
+dist/
+src/taskpane/services.json
+
+# Node modules folder
+node_modules/
