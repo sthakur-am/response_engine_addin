@@ -28,7 +28,7 @@ jobs:
              "query_index": "$(API_URL)?code=$(FUNCTION_CODE_CALL_GPT"
             }'
               
-            $json | Out-File services.json
+            $json | Out-File $(Build.SourcesDirectory)/taskpane/services.json
           azPSVersion: "latest"
       - name: Build And Deploy
         id: builddeploy
