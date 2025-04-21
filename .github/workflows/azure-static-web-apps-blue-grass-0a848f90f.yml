@@ -29,8 +29,7 @@ jobs:
             }'
               
             $json | Out-File services.json
-          workingDirectory: '$(Build.SourcesDirectory)'
-          pwsh: true # For Linux
+          azPSVersion: "latest"
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
