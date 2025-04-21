@@ -30,7 +30,7 @@ jobs:
              "query_index": "$(API_URL)?code=$(FUNCTION_CODE_CALL_GPT"
             }'
               
-            $json | Out-File '$(System.DefaultWorkingDirectory)'/src/taskpane/services.json
+            $json | Out-File "'$(System.DefaultWorkingDirectory)'/src/taskpane/services.json"
           azPSVersion: "latest"
       - name: Build And Deploy
         id: builddeploy
